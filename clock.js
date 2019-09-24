@@ -4,6 +4,7 @@ const clockContainer = document.querySelector(".js-clock"),
 
 function getTime(){
     const date = new Date();
+    // Date 는 현재 시간과 날짜를 반환.
     const minutes = date.getMinutes();
     const hours = date.getHours();
     const seconds = date.getSeconds();
