@@ -2,82 +2,90 @@ const todoForm = document.querySelector(".js-toDoForm"),
     todoInput = todoForm.querySelector("input"),
     todoList = document.querySelector(".js-toDoList");
 
-const TODOS_LS = "todos";
+const TODOS_LIST = "toDos";
+
+let toDos =[];
 
 
-let toDos = [];
+function deleteTodo(event){
 
-function deletetoDo(event){
-   const btn = event.target;
-   const li = btn.parentNode;
+    const btn = event.target;
+    const li = btn.parentNode;
     todoList.removeChild(li);
     const cleantoDos = toDos.filter(function(toDo){
         return toDo.id !== parseInt(li.id);
     });
     toDos = cleantoDos;
-    // toDos가 예전의 것이라서 cleantoDos로 교체.
-    savetoDos();
+    saveTodo();
+ 
 
+    
 
-}    
-
-function savetoDos(){
-    localStorage.setItem(TODOS_LS, JSON.stringify(toDos));
 }
 
 
-
 function paintTodo(text){
+
     const li = document.createElement("li");
     const delbtn = document.createElement("button");
-    delbtn.innerText = "❌";
-    delbtn.addEventListener("click", deletetoDo);
-    const span =document.createElement("span");
+    delbtn.innerText ="❌";
+    delbtn.addEventListener("click", deleteTodo);
+    const span = document.createElement("span");
     span.innerText = text;
     const newId = toDos.length +1;
+//  구분하기 위한 id 설정.
+
     li.appendChild(span);
     li.appendChild(delbtn);
     li.id = newId;
     todoList.appendChild(li);
-    const todoObj = {
-        text : text ,
+    const obj ={
+        text : text,
         id : newId
-    }
-    toDos.push(todoObj);
-    savetoDos();
+
+    };
+//localstorage 에 저장하기 위한 코드.
+
+    toDos.push(obj);
+    saveTodo();
+
 
 }
+
 
 
 function handleSubmit(event){
     event.preventDefault();
     const currentValue = todoInput.value;
     paintTodo(currentValue);
-    todoInput.value = "";
+    todoInput.value = "";  
 
 }
 
-function loadTodos(){
-    const loadedtoDos = localStorage.getItem(TODOS_LS);
+function loadTodo(){
+    const loadedtoDos = localStorage.getItem(TODOS_LIST);
     if(toDos !== null){
+        
         const parsedtoDos = JSON.parse(loadedtoDos);
-
         parsedtoDos.forEach(function(toDo){
-
             paintTodo(toDo.text);
-
         })
         
-
+    
     }
 
 }
 
 
-function init(){
+function saveTodo(){
+    localStorage.setItem(TODOS_LIST, JSON.stringify(toDos));
+}
 
-    loadTodos();
+
+function init(){
+    loadTodo();
     todoForm.addEventListener("submit", handleSubmit);
+
 }
 
 init();
